@@ -6,6 +6,7 @@ import { UserModule } from './user/user.module';
 import { AuthController } from './auth/auth.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { User } from './user/user-entity';
 
 
 @Module({
@@ -22,7 +23,7 @@ username: config.get('DB_USERNAME'),
 password: config.get('DB_PASSWORD'),
 serviceName: config.get('DB_SERVICE_NAME'),
 synchronize: config.get('DB_SYNCHRONIZE') === 'true',
-entities: [],
+entities: [User],
 logging: true,
 }),
 }),
