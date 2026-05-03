@@ -7,6 +7,7 @@ name!: string;
 @IsEmail()
 email!: string;
 
+
 @IsString()
 @IsOptional()
 role?: string;
