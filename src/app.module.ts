@@ -7,6 +7,7 @@ import { AuthController } from './auth/auth.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { User } from './user/user-entity';
+import { ResourcesModule } from './resources/resources.module';
 
 
 @Module({
@@ -29,6 +30,7 @@ logging: true,
 }),
 AuthModule,
 UserModule,
+ResourcesModule,
 ],
 })
 export class AppModule {}
