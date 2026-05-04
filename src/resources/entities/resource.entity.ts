@@ -1,6 +1,7 @@
 // ================= ENTITY =================
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 import { ManyToOne } from 'typeorm';
+import { User } from 'src/user/user-entity';
 
 @Entity()
 export class Resource {
@@ -14,7 +15,7 @@ title: string;
 description: string;
 
 @Column()
-fileUrl: string;
+fileUrl!: string ;
 
 @Column()
 courseId: number;

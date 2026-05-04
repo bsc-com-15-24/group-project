@@ -5,7 +5,7 @@ export class CreateResourceDto {
 @IsNotEmpty()
 title: string;
 
-@IsString
+@IsString()
 description: string;
 
 @IsNumber()

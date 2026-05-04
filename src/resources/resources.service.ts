@@ -3,6 +3,8 @@ import { Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { Resource } from './entities/resource.entity';
 import { InjectRepository } from '@nestjs/typeorm';
+import { CreateResourceDto } from './dto/create-resource.dto';
+import { UpdateResourceDto } from './dto/update-resource.dto';
 
 @Injectable()
 export class ResourcesService {
