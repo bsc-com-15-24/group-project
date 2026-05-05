@@ -12,7 +12,7 @@ export class CreateResourceDto {
     courseId: number;
 
     @IsNumber()
-    uploadedBy: number;
+    uploadedById: number;
 
     @IsString()
     @IsOptional()

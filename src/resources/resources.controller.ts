@@ -5,6 +5,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { CreateResourceDto } from './dto/create-resource.dto';
 import { UpdateResourceDto } from './dto/update-resource.dto';
 import { ResourcesService } from './resources.service';
+import { Resource } from './entities/resource.entity';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
@@ -28,7 +29,7 @@ export class ResourcesController {
     create(
         @Body() dto: CreateResourceDto,
         @UploadedFile() file?: Express.Multer.File,
-    ) {
+    ): Promise<Resource> {
         if (file) {
             return this.service.create({
                 ...dto,

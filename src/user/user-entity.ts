@@ -1,4 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn } from  'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
+import { Resource } from 'src/resources/entities/resource.entity';
 
 @Entity('USERS')
 export class User {
@@ -17,4 +18,6 @@ export class User {
     @Column({default: 'student'})
     role!: string;
 
+    @OneToMany(() => Resource, (resource) => resource.uploadedBy)
+    resources: Resource[];
 }

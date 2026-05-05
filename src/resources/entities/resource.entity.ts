@@ -1,27 +1,26 @@
 // ================= ENTITY =================
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
-import { ManyToOne } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
 import { User } from 'src/user/user-entity';
 
 @Entity()
 export class Resource {
     @PrimaryGeneratedColumn()
-    id: number;
+    id!: number;
 
     @Column()
-    title: string;
+    title!: string;
 
     @Column()
-    description: string;
+    description!: string;
 
     @Column()
-    fileUrl!: string;
+    fileUrl?: string;
 
     @Column()
     courseId: number;
 
     @Column()
-    uploadedBy: number;
+    uploadedById: number;
 
     @Column({ default: () => 'CURRENT_TIMESTAMP' })
     createdAt: Date;
