@@ -5,6 +5,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { User } from './user/user-entity';
 import { ResourcesModule } from './resources/resources.module';
+import { Resource } from './resources/entities/resource.entity';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 
 
 @Module({
@@ -21,10 +24,17 @@ import { ResourcesModule } from './resources/resources.module';
                 password: config.get('DB_PASSWORD'),
                 serviceName: config.get('DB_SERVICE_NAME'),
                 synchronize: config.get('DB_SYNCHRONIZE') === 'true',
-                entities: [User],
+                entities: [User, Resource],
                 logging: true,
             }),
         }),
+
+
+        ServeStaticModule.forRoot({
+            rootPath: join(__dirname, '..', 'uploads'),
+            serveRoot: '/uploads/',
+        }),
+
         AuthModule,
         UserModule,
         ResourcesModule,

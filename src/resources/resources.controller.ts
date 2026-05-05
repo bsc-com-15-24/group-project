@@ -5,7 +5,8 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { CreateResourceDto } from './dto/create-resource.dto';
 import { UpdateResourceDto } from './dto/update-resource.dto';
 import { ResourcesService } from './resources.service';
-import multer from 'multer';
+import { diskStorage } from 'multer';
+import { extname } from 'path';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
 @Controller('api/v1/resources')
@@ -13,19 +14,27 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 export class ResourcesController {
     constructor(private readonly service: ResourcesService) { }
     @Post()
-    @UseInterceptors(FileInterceptor('file'))
+    @UseInterceptors(FileInterceptor('file', {
+        storage: diskStorage({
+            destination: './uploads',
+            filename: (req, file, callback) => {
+                const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
+                const ext = extname(file.originalname);
+                const name = file.originalname.split('.')[0];
+                callback(null, `${name}-${uniqueSuffix}${ext}`);
+            }
+        })
+    }))
     create(
-        @UploadedFile() file: Express.Multer.File,
         @Body() dto: CreateResourceDto,
+        @UploadedFile() file?: Express.Multer.File,
     ) {
-        //you can save file.path or file.filename
-        return this.service.create({
-            ...dto,
-            fileUrl: file.filename,
-        });
-    }
-    @Post()
-    create(@Body() dto: CreateResourceDto) {
+        if (file) {
+            return this.service.create({
+                ...dto,
+                fileUrl: file.filename,
+            });
+        }
         return this.service.create(dto);
     }
     @Get()
