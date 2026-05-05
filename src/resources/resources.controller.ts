@@ -1,13 +1,15 @@
 // ================= CONTROLLER =================
-import { Controller, Get, Post, Body, Param, Delete, Put } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, Put, UseGuards } from '@nestjs/common';
 import { UseInterceptors, UploadedFile } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { CreateResourceDto } from './dto/create-resource.dto';
 import { UpdateResourceDto } from './dto/update-resource.dto';
 import { ResourcesService } from './resources.service';
 import multer from 'multer';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
 @Controller('api/v1/resources')
+@UseGuards(JwtAuthGuard)
 export class ResourcesController {
     constructor(private readonly service: ResourcesService) { }
     @Post()

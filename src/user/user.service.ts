@@ -25,6 +25,9 @@ const user = await this.usersRepository.findOne({ where: { id } });
 if (!user) throw new NotFoundException(`User with id ${id} not found`);
 return user;
 }
+async findByEmail(email: string): Promise<User | null> {
+return await this.usersRepository.findOne({ where: { email } });
+}
 async update(id: number, updateUserDto: UpdateUserDto): Promise<User> {
 await this.findOne(id);
 await this.usersRepository.update(id, updateUserDto);
