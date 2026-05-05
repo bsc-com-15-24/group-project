@@ -5,16 +5,16 @@ import { User } from 'src/user/user-entity';
 @Entity()
 export class Resource {
     @PrimaryGeneratedColumn()
-    id!: number;
+    id: number;
 
     @Column()
-    title!: string;
+    title: string;
 
     @Column()
-    description!: string;
+    description: string;
 
     @Column()
-    fileUrl?: string;
+    fileUrl!: string;
 
     @Column()
     courseId: number;
@@ -30,5 +30,6 @@ export class Resource {
     course: Course;
 
     @ManyToOne(() => User, (user) => user.resources)
+    @JoinColumn({ name: 'uploadedById' })
     uploadedBy: User;
 }
