@@ -19,5 +19,5 @@ export class User {
     role!: string;
 
     @OneToMany(() => Resource, (resource) => resource.uploadedBy)
-    resources: Resource[];
+    resources!: Resource[];
 }
