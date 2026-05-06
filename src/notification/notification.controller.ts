@@ -2,19 +2,26 @@ import { Controller, Get, Patch, Param, UseGuards, Request } from '@nestjs/commo
 import { NotificationService } from './notification.service';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
+interface RequestWithUser extends Request {
+    user: {
+        userId: number;
+        username: string;
+    };
+}
+
 @Controller('notifications')
 @UseGuards(JwtAuthGuard)
 export class NotificationController {
     constructor(private readonly notifService: NotificationService) { }
 
     @Get()
-    getAll(@Request() req) {
-        return this.notifService.findAllForUser(req.user.id);
+    getAll(@Request() req: RequestWithUser) {
+        return this.notifService.findAllForUser(req.user.userId);
     }
 
     @Get('unread')
-    getUnreadCount(@Request() req) {
-        return this.notifService.countUnread(req.user.id);
+    getUnreadCount(@Request() req: RequestWithUser) {
+        return this.notifService.countUnread(req.user.userId);
     }
 
     @Patch(':id/read')
@@ -23,7 +30,7 @@ export class NotificationController {
     }
 
     @Patch('read-all')
-    markAllRead(@Request() req) {
-        return this.notifService.markAllAsRead(req.user.id);
+    markAllRead(@Request() req: RequestWithUser) {
+        return this.notifService.markAllAsRead(req.user.userId);
     }
 }

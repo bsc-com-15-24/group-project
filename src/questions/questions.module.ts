@@ -1,10 +1,12 @@
 import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { QuestionsController } from './questions.controller';
 import { QuestionsService } from './questions.service';
-import { NotificationsModule } from '../notifications/notifications.module';
+import { Question } from './question.entity';
+import { NotificationModule } from '../notification/notification.module';
 
 @Module({
-  imports: [NotificationsModule], // 👈 CRITICAL
+  imports: [TypeOrmModule.forFeature([Question]), NotificationModule],
   controllers: [QuestionsController],
   providers: [QuestionsService],
 })

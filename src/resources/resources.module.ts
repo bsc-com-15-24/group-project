@@ -7,8 +7,8 @@ import { ResourcesController } from './resources.controller';
 import { NotificationModule } from 'src/notification/notification.module';
 
 @Module({
-imports: [TypeOrmModule.forFeature([Resource]), NotificationModule],
-controllers: [ResourcesController],
-providers: [ResourcesService],
+  imports: [TypeOrmModule.forFeature([Resource]), NotificationModule],
+  controllers: [ResourcesController],
+  providers: [ResourcesService],
 })
 export class ResourcesModule {}

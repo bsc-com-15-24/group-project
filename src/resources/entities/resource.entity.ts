@@ -1,35 +1,41 @@
 // ================= ENTITY =================
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  JoinColumn,
+} from 'typeorm';
 import { User } from 'src/user/user-entity';
+import { Course } from 'src/courses/course.entity';
 
 @Entity()
 export class Resource {
-    @PrimaryGeneratedColumn()
-    id: number;
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @Column()
-    title: string;
+  @Column()
+  title: string;
 
-    @Column()
-    description: string;
+  @Column()
+  description: string;
 
-    @Column()
-    fileUrl!: string;
+  @Column()
+  fileUrl!: string;
 
-    @Column()
-    courseId: number;
+  @Column()
+  courseId: number;
 
-    @Column()
-    uploadedById: number;
+  @Column()
+  uploadedById: number;
 
-    @Column({ default: () => 'CURRENT_TIMESTAMP' })
-    createdAt: Date;
+  @Column({ default: () => 'CURRENT_TIMESTAMP' })
+  createdAt: Date;
 
-    @ManyToOne(() => Course, (course) =>
-        course.resources)
-    course: Course;
+  @ManyToOne(() => Course, (course) => course.resources)
+  course: Course;
 
-    @ManyToOne(() => User, (user) => user.resources)
-    @JoinColumn({ name: 'uploadedById' })
-    uploadedBy: User;
+  @ManyToOne(() => User, (user) => user.resources)
+  @JoinColumn({ name: 'uploadedById' })
+  uploadedBy: User;
 }

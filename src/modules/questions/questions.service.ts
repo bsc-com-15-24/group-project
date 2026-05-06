@@ -31,7 +31,7 @@ export class QuestionsService {
   }
 
   findOne(id: number): Question {
-    const q = this.questions.find(x => x.id === id);
+    const q = this.questions.find((x) => x.id === id);
     if (!q) throw new NotFoundException('Question not found');
     return q;
   }
@@ -44,7 +44,7 @@ export class QuestionsService {
   }
 
   remove(id: number) {
-    const index = this.questions.findIndex(q => q.id === id);
+    const index = this.questions.findIndex((q) => q.id === id);
     if (index === -1) throw new NotFoundException('Question not found');
 
     this.questions.splice(index, 1);

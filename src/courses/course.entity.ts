@@ -1,20 +1,23 @@
-import {Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
+import { Resource } from 'src/resources/entities/resource.entity';
 
 @Entity('courses')
-export class course {
-    @PrimaryGeneratedColumn()
-    id!: number;
+export class Course {
+  @PrimaryGeneratedColumn()
+  id!: number;
 
-    @Column()
-    title!: string;
+  @Column()
+  title!: string;
 
-    @Column({ nullable: true })
-    description!: string;
+  @Column({ nullable: true })
+  description!: string;
 
-    @Column()
-    credits!: number;
+  @Column()
+  credits!: number;
 
-    @Column({ nullable: true })
-    instructor!: string;
+  @Column({ nullable: true })
+  instructor!: string;
+
+  @OneToMany(() => Resource, (resource) => resource.course)
+  resources!: Resource[];
 }
-

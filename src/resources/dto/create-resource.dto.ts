@@ -1,20 +1,20 @@
 import { IsString, IsNotEmpty, IsNumber, IsOptional } from 'class-validator';
 
 export class CreateResourceDto {
-    @IsString()
-    @IsNotEmpty()
-    title: string;
+  @IsString()
+  @IsNotEmpty()
+  title: string;
 
-    @IsString()
-    description: string;
+  @IsString()
+  description: string;
 
-    @IsNumber()
-    courseId: number;
+  @IsNumber()
+  courseId: number;
 
-    @IsNumber()
-    uploadedById: number;
+  @IsNumber()
+  uploadedById: number;
 
-    @IsString()
-    @IsOptional()
-    fileUrl?: string;
+  @IsString()
+  @IsOptional()
+  fileUrl?: string;
 }

@@ -1,7 +1,5 @@
 export class UpdateResourceDto {
+  title?: string;
 
-title?: string;
-
-description?: string;
-
+  description?: string;
 }

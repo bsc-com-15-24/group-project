@@ -1,43 +1,40 @@
-import { Inject, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { JwtStrategy } from './jwt.strategy';
 import { JwtModule, JwtModuleOptions } from '@nestjs/jwt';
-import { PassportModule } from '@nestjs/passport';
-import { ConfigModule,ConfigService } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { UserModule } from '../user/user.module';
 
 @Module({
-    imports:[ConfigModule, UserModule,
-     JwtModule.registerAsync({
-  imports: [ConfigModule],
-  inject: [ConfigService],
-  useFactory: async (configService: ConfigService): Promise<JwtModuleOptions> => {
-    const secret = configService.get<string>("JWT_SECRET_KEY");
-    if (!secret) {
-      throw new Error("JWT_SECRET_KEY must be defined");
-    }
+  imports: [
+    ConfigModule,
+    UserModule,
+    JwtModule.registerAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService): JwtModuleOptions => {
+        const secret = configService.get<string>('JWT_SECRET_KEY');
+        if (!secret) {
+          throw new Error('JWT_SECRET_KEY must be defined');
+        }
 
-    const expiresIn = configService.get<string>("JWT_EXPIRES_IN");
-    if (!expiresIn) {
-      throw new Error("JWT_EXPIRES_IN must be defined");
-    }
+        const expiresIn = configService.get<string>('JWT_EXPIRES_IN');
+        if (!expiresIn) {
+          throw new Error('JWT_EXPIRES_IN must be defined');
+        }
 
-    return {
-      secret,
-      signOptions: {
-         expiresIn: expiresIn as any,
+        return {
+          secret,
+          signOptions: {
+            expiresIn: expiresIn as any,
+          },
+        };
       },
-    };
-  },
-  
-}),
-      
-   
-    ],
-      
-    
-    providers: [AuthService, JwtStrategy],
-    controllers: [AuthController],
+    }),
+  ],
+
+  providers: [AuthService, JwtStrategy],
+  controllers: [AuthController],
 })
-export class AuthModule {}
+export class AuthModule { }

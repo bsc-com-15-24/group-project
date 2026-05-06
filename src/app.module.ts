@@ -8,36 +8,43 @@ import { ResourcesModule } from './resources/resources.module';
 import { Resource } from './resources/entities/resource.entity';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
-
+import { Notification } from './notification/entity/notification.entity';
+import { NotificationModule } from './notification/notification.module';
+import { Course } from './courses/course.entity';
+import { CoursesModule } from './courses/courses.module';
+import { Question } from './questions/question.entity';
+import { QuestionsModule } from './questions/questions.module';
 
 @Module({
-    imports: [
-        ConfigModule.forRoot({ isGlobal: true }),
-        TypeOrmModule.forRootAsync({
-            imports: [ConfigModule],
-            inject: [ConfigService],
-            useFactory: (config: ConfigService) => ({
-                type: 'oracle',
-                host: config.get('DB_HOST'),
-                port: parseInt(config.get<string>('DB_PORT')!),
-                username: config.get('DB_USERNAME'),
-                password: config.get('DB_PASSWORD'),
-                serviceName: config.get('DB_SERVICE_NAME'),
-                synchronize: config.get('DB_SYNCHRONIZE') === 'true',
-                entities: [User, Resource],
-                logging: true,
-            }),
-        }),
+  imports: [
+    ConfigModule.forRoot({ isGlobal: true }),
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) => ({
+        type: 'oracle',
+        host: config.get('DB_HOST'),
+        port: parseInt(config.get<string>('DB_PORT')),
+        username: config.get('DB_USERNAME'),
+        password: config.get('DB_PASSWORD'),
+        serviceName: config.get('DB_SERVICE_NAME'),
+        synchronize: config.get('DB_SYNCHRONIZE') === 'true',
+        entities: [User, Resource, Notification, Course, Question],
+        logging: true,
+      }),
+    }),
 
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'uploads'),
+      serveRoot: '/uploads/',
+    }),
 
-        ServeStaticModule.forRoot({
-            rootPath: join(__dirname, '..', 'uploads'),
-            serveRoot: '/uploads/',
-        }),
-
-        AuthModule,
-        UserModule,
-        ResourcesModule,
-    ],
+    AuthModule,
+    UserModule,
+    ResourcesModule,
+    NotificationModule,
+    CoursesModule,
+    QuestionsModule,
+  ],
 })
 export class AppModule {}
