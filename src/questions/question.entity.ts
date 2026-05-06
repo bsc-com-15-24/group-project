@@ -13,7 +13,7 @@ export class Question {
   @Column()
   title: string;
 
-  @Column('text')
+  @Column('clob')
   content: string;
 
   @CreateDateColumn()
