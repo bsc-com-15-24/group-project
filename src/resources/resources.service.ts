@@ -5,17 +5,27 @@ import { Resource } from './entities/resource.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateResourceDto } from './dto/create-resource.dto';
 import { UpdateResourceDto } from './dto/update-resource.dto';
+import { NotificationService } from 'src/notification/notification.service';
 
 @Injectable()
 export class ResourcesService {
     constructor(
         @InjectRepository(Resource)
         private resourceRepo: Repository<Resource>,
+        private notifService: NotificationService,
     ) {}
 
-    create(dto: CreateResourceDto) {
+    async create(dto: CreateResourceDto, userId?: number): Promise<Resource> {
         const resource = this.resourceRepo.create(dto);
-        return this.resourceRepo.save(resource);
+        const saved = await this.resourceRepo.save(resource);
+        if (userId) {
+            await this.notifService.create(
+                userId,
+                'resource_uploaded',
+                `Your resource "${saved.title}" was uploaded successfully.`,
+            );
+        }
+        return saved;
     }
 async findAll(): Promise<Resource[]> {
 return this.resourceRepo.find();

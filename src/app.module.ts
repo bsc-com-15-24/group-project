@@ -8,6 +8,8 @@ import { ResourcesModule } from './resources/resources.module';
 import { Resource } from './resources/entities/resource.entity';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
+import { Notification } from './notification/entity/notification.entity';
+import { NotificationModule } from './notification/notification.module';
 
 
 @Module({
@@ -24,7 +26,7 @@ import { join } from 'path';
                 password: config.get('DB_PASSWORD'),
                 serviceName: config.get('DB_SERVICE_NAME'),
                 synchronize: config.get('DB_SYNCHRONIZE') === 'true',
-                entities: [User, Resource],
+                entities: [User, Resource, Notification],
                 logging: true,
             }),
         }),
@@ -38,6 +40,7 @@ import { join } from 'path';
         AuthModule,
         UserModule,
         ResourcesModule,
+        NotificationModule,
     ],
 })
 export class AppModule { }

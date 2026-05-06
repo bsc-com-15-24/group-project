@@ -1,5 +1,5 @@
 // ================= CONTROLLER =================
-import { Controller, Get, Post, Body, Param, Delete, Put, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, Put, UseGuards, Request } from '@nestjs/common';
 import { UseInterceptors, UploadedFile } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { CreateResourceDto } from './dto/create-resource.dto';
@@ -29,14 +29,16 @@ export class ResourcesController {
     create(
         @Body() dto: CreateResourceDto,
         @UploadedFile() file?: Express.Multer.File,
+        @Request() req?,
     ): Promise<Resource> {
+        const userId = req?.user?.id;
         if (file) {
             return this.service.create({
                 ...dto,
                 fileUrl: file.filename,
-            });
+            }, userId);
         }
-        return this.service.create(dto);
+        return this.service.create(dto, userId);
     }
     @Get()
     findAll() {
