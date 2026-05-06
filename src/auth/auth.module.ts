@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { Module } from '@nestjs/common';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
@@ -24,11 +25,10 @@ import { UserModule } from '../user/user.module';
           throw new Error('JWT_EXPIRES_IN must be defined');
         }
 
+        const signOptions: any = { expiresIn };
         return {
           secret,
-          signOptions: {
-            expiresIn: expiresIn as any,
-          },
+          signOptions,
         };
       },
     }),
@@ -37,4 +37,4 @@ import { UserModule } from '../user/user.module';
   providers: [AuthService, JwtStrategy],
   controllers: [AuthController],
 })
-export class AuthModule { }
+export class AuthModule {}
