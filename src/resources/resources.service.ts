@@ -6,6 +6,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { CreateResourceDto } from './dto/create-resource.dto';
 import { UpdateResourceDto } from './dto/update-resource.dto';
 import { NotificationService } from 'src/notification/notification.service';
+import { MailerService } from '@nestjs-modules/mailer';
+import { UsersService } from 'src/user/user.service';
 
 @Injectable()
 export class ResourcesService {
@@ -13,7 +15,9 @@ export class ResourcesService {
     @InjectRepository(Resource)
     private resourceRepo: Repository<Resource>,
     private notifService: NotificationService,
-  ) {}
+    private mailerService: MailerService,
+    private usersService: UsersService,
+  ) { }
 
   async create(dto: CreateResourceDto, userId?: number): Promise<Resource> {
     const resource = this.resourceRepo.create(dto);
@@ -25,6 +29,18 @@ export class ResourcesService {
         `Your resource "${saved.title}" was uploaded successfully.`,
       );
     }
+
+    // Notify all users 
+    this.usersService.findAll().then((users) => {
+      users.forEach((user) => {
+        this.mailerService.sendMail({
+          to: user.email,
+          subject: `New Resource Uploaded: ${saved.title}`,
+          text: `A new resource has been uploaded!\n\nTitle: ${saved.title}\nDescription: ${saved.description}\nDownload it here: http://localhost:3000/uploads/${saved.fileUrl}`,
+        }).catch(err => console.error('Failed to send email:', err));
+      });
+    });
+
     return saved;
   }
   async searchByName(name: string): Promise<Resource[]> {

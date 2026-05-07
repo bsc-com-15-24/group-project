@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { MailerModule } from '@nestjs-modules/mailer';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -37,6 +38,23 @@ import { QuestionsModule } from './questions/questions.module';
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'uploads'),
       serveRoot: '/uploads/',
+    }),
+    MailerModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) => ({
+        transport: {
+          host: config.get('SMTP_HOST', 'smtp.ethereal.email'),
+          port: config.get('SMTP_PORT', 587),
+          auth: {
+            user: config.get('SMTP_USER', 'test_user'),
+            pass: config.get('SMTP_PASS', 'test_pass'),
+          },
+        },
+        defaults: {
+          from: '"Students Notes" <noreply@studentsnotes.com>',
+        },
+      }),
     }),
 
     AuthModule,
