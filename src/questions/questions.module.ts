@@ -5,9 +5,10 @@ import { QuestionsService } from './questions.service';
 import { Question } from './question.entity';
 import { NotificationModule } from '../notification/notification.module';
 import { UserModule } from '../user/user.module';
+import { CoursesModule } from '../courses/courses.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Question]), NotificationModule, UserModule],
+  imports: [TypeOrmModule.forFeature([Question]), NotificationModule, UserModule, CoursesModule],
   controllers: [QuestionsController],
   providers: [QuestionsService],
   exports: [QuestionsService],
