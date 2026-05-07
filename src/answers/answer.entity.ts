@@ -19,6 +19,6 @@ export class Answer {
   @ManyToOne(() => Question, (question) => question.answers, { onDelete: 'CASCADE' })
   question: Question;
 
-  @ManyToOne(() => User)
+  @ManyToOne(() => User, { onDelete: 'SET NULL', nullable: true })
   author: User;
 }

@@ -30,18 +30,44 @@ export class ResourcesService {
       );
     }
 
-    // Notify all users 
-    this.usersService.findAll().then((users) => {
-      users.forEach((user) => {
-        this.mailerService.sendMail({
-          to: user.email,
-          subject: `New Resource Uploaded: ${saved.title}`,
-          text: `A new resource has been uploaded!\n\nTitle: ${saved.title}\nDescription: ${saved.description}\nDownload it here: http://localhost:3000/uploads/${saved.fileUrl}`,
-        }).catch(err => console.error('Failed to send email:', err));
-      });
-    });
+    // Notify all users in the background (except the uploader)
+    this.notifyUsers(saved, userId).catch(err => console.error('Background notification failed:', err));
 
     return saved;
+  }
+
+  private async notifyUsers(resource: Resource, uploaderId?: number) {
+    try {
+      const users = await this.usersService.findAll();
+
+      const emailPromises = users.map(user => {
+        const isUploader = user.id === uploaderId;
+
+        const subject = isUploader
+          ? `Upload Successful: ${resource.title}`
+          : `New Resource Uploaded: ${resource.title}`;
+
+        const text = isUploader
+          ? `Hello ${user.name},\n\nYour resource "${resource.title}" has been successfully uploaded and is now available to other students.\n\nThank you for contributing!`
+          : `A new resource has been uploaded!\n\nTitle: ${resource.title}\nDescription: ${resource.description}\nDownload it here: http://localhost:3000/uploads/${resource.fileUrl}`;
+
+        return this.mailerService.sendMail({
+          to: user.email,
+          subject: subject,
+          text: text,
+        }).catch(err => {
+          if (err.code === 'EAUTH') {
+            console.warn('SMTP Authentication failed. Please check your SMTP_USER and SMTP_PASS in .env');
+          } else {
+            console.error(`Failed to send email to ${user.email}:`, err);
+          }
+        });
+      });
+
+      await Promise.all(emailPromises);
+    } catch (err) {
+      console.error('Error in notifyUsers:', err);
+    }
   }
   async searchByName(name: string): Promise<Resource[]> {
     return this.resourceRepo.find({

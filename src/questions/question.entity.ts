@@ -17,7 +17,7 @@ export class Question {
   @CreateDateColumn()
   createdAt: Date;
 
-  @ManyToOne(() => User)
+  @ManyToOne(() => User, { onDelete: 'SET NULL', nullable: true })
   author: User;
 
   @Column({ nullable: true })

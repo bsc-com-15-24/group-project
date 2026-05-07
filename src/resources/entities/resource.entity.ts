@@ -26,8 +26,8 @@ export class Resource {
   @Column()
   courseId: number;
 
-  @Column()
-  uploadedById: number;
+  @Column({ nullable: true })
+  uploadedById: number | null;
 
   @Column({ default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;
@@ -35,7 +35,7 @@ export class Resource {
   @ManyToOne(() => Course, (course) => course.resources)
   course: Course;
 
-  @ManyToOne(() => User, (user) => user.resources)
+  @ManyToOne(() => User, (user) => user.resources, { onDelete: 'SET NULL' })
   @JoinColumn({ name: 'uploadedById' })
   uploadedBy: User;
 }

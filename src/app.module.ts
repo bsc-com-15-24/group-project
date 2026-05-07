@@ -46,15 +46,15 @@ import { Answer } from './answers/answer.entity';
       inject: [ConfigService],
       useFactory: (config: ConfigService) => ({
         transport: {
-          host: config.get('SMTP_HOST', 'smtp.ethereal.email'),
+          host: config.get('SMTP_HOST'),
           port: config.get('SMTP_PORT', 587),
           auth: {
-            user: config.get('SMTP_USER', 'test_user'),
-            pass: config.get('SMTP_PASS', 'test_pass'),
+            user: config.get('SMTP_USER'),
+            pass: config.get('SMTP_PASS'),
           },
         },
         defaults: {
-          from: '"Students Notes" <noreply@studentsnotes.com>',
+          from: config.get('SMTP_FROM', '"Students Notes" <noreply@studentsnotes.com>'),
         },
       }),
     }),
