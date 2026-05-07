@@ -1,6 +1,6 @@
 // ================= SERVICE =================
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Repository } from 'typeorm';
+import { Repository, Like } from 'typeorm';
 import { Resource } from './entities/resource.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateResourceDto } from './dto/create-resource.dto';
@@ -27,6 +27,12 @@ export class ResourcesService {
     }
     return saved;
   }
+  async searchByName(name: string): Promise<Resource[]> {
+    return this.resourceRepo.find({
+      where: { title: Like(`%${name}%`) },
+    });
+  }
+
   async findAll(): Promise<Resource[]> {
     return this.resourceRepo.find();
   }
