@@ -20,10 +20,10 @@ export class QuestionsService {
     });
     const saved = await this.questionRepo.save(question);
 
-    await this.notificationService.create(
-      null,
+    await this.notificationService.createGlobal(
       'question_created',
       `New question created: ${saved.title}`,
+      userId
     );
 
     return saved;
