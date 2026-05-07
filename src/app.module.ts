@@ -15,6 +15,8 @@ import { Course } from './courses/course.entity';
 import { CoursesModule } from './courses/courses.module';
 import { Question } from './questions/question.entity';
 import { QuestionsModule } from './questions/questions.module';
+import { AnswersModule } from './answers/answers.module';
+import { Answer } from './answers/answer.entity';
 
 @Module({
   imports: [
@@ -30,7 +32,7 @@ import { QuestionsModule } from './questions/questions.module';
         password: config.get('DB_PASSWORD'),
         serviceName: config.get('DB_SERVICE_NAME'),
         synchronize: config.get('DB_SYNCHRONIZE') === 'true',
-        entities: [User, Resource, Notification, Course, Question],
+        entities: [User, Resource, Notification, Course, Question, Answer],
         logging: true,
       }),
     }),
@@ -63,6 +65,7 @@ import { QuestionsModule } from './questions/questions.module';
     NotificationModule,
     CoursesModule,
     QuestionsModule,
+    AnswersModule,
   ],
 })
 export class AppModule {}
