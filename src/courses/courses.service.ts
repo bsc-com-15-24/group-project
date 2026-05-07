@@ -2,15 +2,16 @@ import { Repository } from 'typeorm';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Course } from './course.entity';
+import { CreateCourseDto } from './dto/create-course.dto';
 
 @Injectable()
 export class CoursesService {
   constructor(
     @InjectRepository(Course)
     private coursesRepository: Repository<Course>,
-  ) {}
+  ) { }
 
-  async create(Data: Partial<Course>): Promise<Course> {
+  async create(Data: CreateCourseDto): Promise<Course> {
     const course = this.coursesRepository.create(Data);
     return this.coursesRepository.save(course);
   }
@@ -27,7 +28,7 @@ export class CoursesService {
     return course;
   }
 
-  async update(id: number, Data: Partial<Course>): Promise<Course> {
+  async update(id: number, Data: Partial<CreateCourseDto>): Promise<Course> {
     await this.findOne(id);
     await this.coursesRepository.update(id, Data);
     return this.findOne(id);

@@ -10,13 +10,14 @@ import {
 } from '@nestjs/common';
 import { CoursesService } from './courses.service';
 import { Course } from './course.entity';
+import { CreateCourseDto } from './dto/create-course.dto';
 
 @Controller('courses')
 export class CoursesController {
   constructor(private readonly coursesService: CoursesService) {}
 
   @Post()
-  create(@Body() body: Partial<Course>) {
+  create(@Body() body: CreateCourseDto) {
     return this.coursesService.create(body);
   }
 
@@ -31,7 +32,7 @@ export class CoursesController {
   }
 
   @Put(':id')
-  update(@Param('id', ParseIntPipe) id: number, @Body() body: Partial<Course>) {
+  update(@Param('id', ParseIntPipe) id: number, @Body() body: Partial<CreateCourseDto>) {
     return this.coursesService.update(id, body);
   }
 
