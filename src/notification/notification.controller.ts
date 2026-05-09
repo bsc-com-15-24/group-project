@@ -1,19 +1,10 @@
-import {
-  Controller,
-  Get,
-  Patch,
-  Param,
-  UseGuards,
-  Request,
-  Delete,
-  Post,
-  Body,
-} from '@nestjs/common';
+import { Controller, Get, Patch, Param, UseGuards, Request, Delete } from '@nestjs/common';
+import { Request as ExpressRequest } from 'express';
 import { NotificationService } from './notification.service';
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
-import { CreateNotificationDto } from './dto/create-notification.dto';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
-interface RequestWithUser extends Request {
+
+interface RequestWithUser extends ExpressRequest {
   user: {
     userId: number;
     username: string;
@@ -23,17 +14,7 @@ interface RequestWithUser extends Request {
 @Controller('notifications')
 @UseGuards(JwtAuthGuard)
 export class NotificationController {
-  constructor(private readonly notifService: NotificationService) {}
-
-  @Post()
-  create(@Body() dto: CreateNotificationDto) {
-    return this.notifService.create(dto.userId, dto.type, dto.message);
-  }
-
-  @Post('global')
-  createGlobal(@Body() dto: { type: string; message: string }) {
-    return this.notifService.createGlobal(dto.type, dto.message);
-  }
+  constructor(private readonly notifService: NotificationService) { }
 
   @Get()
   getAll(@Request() req: RequestWithUser) {

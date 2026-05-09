@@ -1,6 +1,7 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, ManyToOne, } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, ManyToOne, JoinColumn } from 'typeorm';
 import { Question } from '../questions/question.entity';
 import { User } from '../user/user-entity';
+import { Resource } from '../resources/entities/resource.entity';
 
 @Entity('answers')
 export class Answer {
@@ -21,4 +22,11 @@ export class Answer {
 
   @ManyToOne(() => User, { onDelete: 'SET NULL', nullable: true })
   author: User;
+
+  @Column({ nullable: true })
+  resourceId: number;
+
+  @ManyToOne(() => Resource, { nullable: true, onDelete: 'SET NULL' })
+  @JoinColumn({ name: 'resourceId' })
+  resource: Resource;
 }

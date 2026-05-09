@@ -30,14 +30,14 @@ export class ResourcesService {
       );
     }
 
-    // Notify all users in the database (except the uploader)
+
     await this.notifService.createGlobal(
       'new_resource',
       `A new resource "${saved.title}" has been uploaded!`,
       userId
     );
 
-    // Notify all users via email in the background (except the uploader)
+
     this.notifyUsers(saved, userId).catch(err => console.error('Background notification failed:', err));
 
     return saved;

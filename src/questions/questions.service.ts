@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { Question } from './question.entity';
 import { CreateQuestionDto } from './dto/create-question.dto';
 import { NotificationService } from '../notification/notification.service';
+import { ResourcesService } from '../resources/resources.service';
 
 @Injectable()
 export class QuestionsService {
@@ -11,11 +12,26 @@ export class QuestionsService {
     @InjectRepository(Question)
     private questionRepo: Repository<Question>,
     private notificationService: NotificationService,
+    private resourcesService: ResourcesService,
   ) { }
 
-  async create(dto: CreateQuestionDto, userId: number): Promise<Question> {
+  async create(dto: CreateQuestionDto, userId: number, filename?: string): Promise<Question> {
+    let resourceId = dto.resourceId;
+
+    if (filename) {
+      const resource = await this.resourcesService.create({
+        title: dto.title,
+        description: `Attached to question: ${dto.title}`,
+        courseId: dto.courseId || 0,
+        uploadedById: userId,
+        fileUrl: filename,
+      }, userId);
+      resourceId = resource.id;
+    }
+
     const question = this.questionRepo.create({
       ...dto,
+      resourceId,
       author: { id: userId } as any,
     });
     const saved = await this.questionRepo.save(question);
@@ -31,7 +47,7 @@ export class QuestionsService {
 
   async findAll(): Promise<Question[]> {
     return this.questionRepo.find({
-      relations: ['author', 'course'],
+      relations: ['author', 'course', 'resource'],
       order: { createdAt: 'DESC' },
     });
   }
@@ -39,7 +55,7 @@ export class QuestionsService {
   async findOne(id: number): Promise<Question> {
     const q = await this.questionRepo.findOne({
       where: { id },
-      relations: ['author', 'course', 'answers', 'answers.author']
+      relations: ['author', 'course', 'resource', 'answers', 'answers.author', 'answers.resource']
     });
     if (!q) throw new NotFoundException('Question not found');
     return q;

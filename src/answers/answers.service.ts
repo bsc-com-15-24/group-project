@@ -5,6 +5,7 @@ import { Answer } from './answer.entity';
 import { CreateAnswerDto } from './dto/create-answer.dto';
 import { QuestionsService } from '../questions/questions.service';
 import { NotificationService } from '../notification/notification.service';
+import { ResourcesService } from '../resources/resources.service';
 
 @Injectable()
 export class AnswersService {
@@ -13,13 +14,28 @@ export class AnswersService {
     private answerRepo: Repository<Answer>,
     private questionsService: QuestionsService,
     private notifService: NotificationService,
+    private resourcesService: ResourcesService,
   ) {}
 
-  async create(questionId: number, userId: number, dto: CreateAnswerDto) {
+  async create(questionId: number, userId: number, dto: CreateAnswerDto, filename?: string) {
     const question = await this.questionsService.findOne(questionId);
+
+    let resourceId = dto.resourceId;
+
+    if (filename) {
+      const resource = await this.resourcesService.create({
+        title: `Answer to: ${question.title}`,
+        description: `Attached to answer for question: ${question.title}`,
+        courseId: question.courseId || 0,
+        uploadedById: userId,
+        fileUrl: filename,
+      }, userId);
+      resourceId = resource.id;
+    }
 
     const answer = this.answerRepo.create({
       ...dto,
+      resourceId,
       question: { id: questionId } as any,
       author: { id: userId } as any,
     });

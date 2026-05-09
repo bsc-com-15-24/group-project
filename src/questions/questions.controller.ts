@@ -1,4 +1,7 @@
-import { Controller, Get, Post, Put, Delete, Body, Param, UseGuards, Request, } from '@nestjs/common';
+import { Controller, Get, Post, Put, Delete, Body, Param, UseGuards, Request, UseInterceptors, UploadedFile } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
+import { extname } from 'path';
 import { ApiBearerAuth } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { QuestionsService } from './questions.service';
@@ -11,8 +14,25 @@ export class QuestionsController {
   constructor(private readonly questionsService: QuestionsService) { }
 
   @Post()
-  create(@Body() dto: CreateQuestionDto, @Request() req: any) {
-    return this.questionsService.create(dto, req.user.userId);
+  @UseInterceptors(
+    FileInterceptor('file', {
+      storage: diskStorage({
+        destination: './uploads',
+        filename: (req, file, callback) => {
+          const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
+          const ext = extname(file.originalname);
+          const name = file.originalname.split('.')[0];
+          callback(null, `${name}-${uniqueSuffix}${ext}`);
+        },
+      }),
+    }),
+  )
+  create(
+    @Body() dto: CreateQuestionDto, 
+    @Request() req: any,
+    @UploadedFile() file?: Express.Multer.File,
+  ) {
+    return this.questionsService.create(dto, req.user.userId, file?.filename);
   }
 
   @Get()

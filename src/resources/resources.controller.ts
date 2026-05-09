@@ -1,6 +1,7 @@
 // ================= CONTROLLER =================
 import { ApiConsumes, ApiBody, ApiBearerAuth } from '@nestjs/swagger';
 import { Controller, Get, Post, Body, Param, Delete, Put, UseGuards, Request, Query, } from '@nestjs/common';
+import { Request as ExpressRequest } from 'express';
 import { UseInterceptors, UploadedFile } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { CreateResourceDto } from './dto/create-resource.dto';
@@ -11,7 +12,7 @@ import { diskStorage } from 'multer';
 import { extname } from 'path';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
-interface RequestWithUser extends Request {
+interface RequestWithUser extends ExpressRequest {
   user: {
     userId: number;
     username: string;

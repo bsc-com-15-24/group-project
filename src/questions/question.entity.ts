@@ -2,6 +2,7 @@ import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, ManyToOne, On
 import { User } from '../user/user-entity';
 import { Course } from '../courses/course.entity';
 import { Answer } from '../answers/answer.entity';
+import { Resource } from '../resources/entities/resource.entity';
 
 @Entity('questions')
 export class Question {
@@ -26,6 +27,13 @@ export class Question {
   @ManyToOne(() => Course, { nullable: true })
   @JoinColumn({ name: 'courseId' })
   course: Course;
+
+  @Column({ nullable: true })
+  resourceId: number;
+
+  @ManyToOne(() => Resource, { nullable: true, onDelete: 'SET NULL' })
+  @JoinColumn({ name: 'resourceId' })
+  resource: Resource;
 
   @OneToMany(() => Answer, (answer) => answer.question)
   answers: Answer[];

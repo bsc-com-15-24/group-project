@@ -11,5 +11,6 @@ import { UserModule } from 'src/user/user.module';
   imports: [TypeOrmModule.forFeature([Resource]), NotificationModule, UserModule],
   controllers: [ResourcesController],
   providers: [ResourcesService],
+  exports: [ResourcesService],
 })
 export class ResourcesModule {}

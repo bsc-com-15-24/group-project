@@ -12,4 +12,8 @@ export class CreateQuestionDto {
   @IsNumber()
   @IsOptional()
   courseId?: number;
+
+  @IsNumber()
+  @IsOptional()
+  resourceId?: number;
 }
