@@ -2,7 +2,7 @@ import { Controller, Get, Post, Put, Delete, Body, Param, UseGuards, Request, Us
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiConsumes, ApiBody } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { QuestionsService } from './questions.service';
 import { CreateQuestionDto } from './dto/create-question.dto';
@@ -27,6 +27,24 @@ export class QuestionsController {
       }),
     }),
   )
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        title: { type: 'string' },
+        content: { type: 'string' },
+        courseId: { type: 'integer' },
+        resourceId: { type: 'integer' },
+        file: {
+          type: 'string',
+          format: 'binary',
+          description: 'Optional file attachment',
+        },
+      },
+      required: ['title', 'content'],
+    },
+  })
   create(
     @Body() dto: CreateQuestionDto, 
     @Request() req: any,

@@ -2,7 +2,7 @@ import { Controller, Post, Body, Param, Request, UseGuards, Put, UseInterceptors
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiConsumes, ApiBody } from '@nestjs/swagger';
 import { AnswersService } from './answers.service';
 import { CreateAnswerDto } from './dto/create-answer.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
@@ -27,6 +27,22 @@ export class AnswersController {
       }),
     }),
   )
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        content: { type: 'string' },
+        resourceId: { type: 'integer' },
+        file: {
+          type: 'string',
+          format: 'binary',
+          description: 'Optional file attachment',
+        },
+      },
+      required: ['content'],
+    },
+  })
   create(
     @Param('questionId') questionId: string,
     @Body() dto: CreateAnswerDto,

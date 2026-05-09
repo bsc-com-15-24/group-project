@@ -23,8 +23,8 @@ export class Resource {
   @Column()
   fileUrl!: string;
 
-  @Column()
-  courseId: number;
+  @Column({ nullable: true })
+  courseId: number | null;
 
   @Column({ nullable: true })
   uploadedById: number | null;

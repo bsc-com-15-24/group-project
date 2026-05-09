@@ -26,7 +26,7 @@ export class AnswersService {
       const resource = await this.resourcesService.create({
         title: `Answer to: ${question.title}`,
         description: `Attached to answer for question: ${question.title}`,
-        courseId: question.courseId || 0,
+        courseId: question.courseId || null,
         uploadedById: userId,
         fileUrl: filename,
       }, userId);

@@ -22,7 +22,7 @@ export class QuestionsService {
       const resource = await this.resourcesService.create({
         title: dto.title,
         description: `Attached to question: ${dto.title}`,
-        courseId: dto.courseId || 0,
+        courseId: dto.courseId || null,
         uploadedById: userId,
         fileUrl: filename,
       }, userId);
